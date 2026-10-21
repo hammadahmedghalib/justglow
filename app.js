@@ -7,6 +7,24 @@
 
     const db = ready ? supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : null;
 
+
+
+    // Helper to convert image to Base64 for PDF
+    async function getLogoBase64() {
+        try {
+            const response = await fetch('logo.png');
+            const blob = await response.blob();
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        } catch (e) {
+            return null;
+        }
+    }
+
+
     let user = null;
     let records = [];
     let customers = [];
@@ -462,7 +480,7 @@
     };
 
     /* ---------- PDF ---------- */
-    window.makePDF = () => {
+    window.makePDF = async () => {
         const rs = reportRows();
         if (!rs.length) return toast("No matching records to export.", "warning");
         if (!window.jspdf) return toast("PDF library failed to load.", "error");
@@ -474,22 +492,22 @@
         const total = rs.reduce((s, r) => s + Number(r.quantity) * Number(r.rate), 0);
 
         /* Header band */
-        doc.setFillColor(37, 99, 235);
-        doc.rect(0, 0, 297, 26, "F");
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(17); doc.setFont("helvetica", "bold");
-        doc.text(company, 14, 12);
-        doc.setFontSize(10); doc.setFont("helvetica", "normal");
-        doc.text(
-            $("reportType").value === "invoice" ? "TRANSPORT INVOICE" : "TRANSPORT SERVICE REPORT",
-            14, 20
-        );
-        doc.setFontSize(9);
-        doc.text(
-            `${$("reportCustomer").selectedOptions[0]?.text || "All customers"}  ·  ${date($("from").value)} — ${date($("to").value)}`,
-            283, 20, { align: "right" }
-        );
-
+               /* Header band */
+        const logoBase64 = await getLogoBase64();
+        
+        if (logoBase64) {
+            // Draw the logo on a white background at the top left
+            doc.addImage(logoBase64, 'PNG', 14, 6, 45, 14); 
+            doc.setTextColor(30, 45, 58);
+            doc.setFontSize(9);
+        } else {
+            // Fallback if logo fails to load
+            doc.setFillColor(37, 99, 235);
+            doc.rect(0, 0, 297, 26, "F");
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(17); doc.setFont("helvetica", "bold");
+            doc.text(company, 14, 12);
+        }
         /* Meta block */
         doc.setTextColor(30, 45, 58);
         doc.setFontSize(9.5);
