@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Transport Ledger</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="login" class="login">
+    <div class="login-bg"></div>
+
+    <div class="login-shell">
+        <div class="brand login-brand">
+            <div class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 13l2-6h14l2 6"/><path d="M5 13h14v5H5z"/>
+                    <circle cx="7.5" cy="18.5" r="1.5"/><circle cx="16.5" cy="18.5" r="1.5"/>
+                </svg>
+            </div>
+            <div>
+                <strong>Transport Ledger</strong>
+                <small>INVOICE &amp; CALCULATION MANAGEMENT</small>
+            </div>
+        </div>
+
+        <form id="loginForm" class="card login-card">
+            <small class="eyebrow">Secure workspace</small>
+            <h1>Welcome back</h1>
+            <p class="muted">Sign in with your administrator account.</p>
+
+            <label>Email
+                <input id="email" type="email" required autocomplete="username" placeholder="you@company.ae">
+            </label>
+
+            <label>Password
+                <input id="password" type="password" required autocomplete="current-password" placeholder="••••••••">
+            </label>
+
+            <button class="primary block" type="submit">Sign in</button>
+            <p id="loginMsg" class="form-msg"></p>
+            <small class="login-foot">Authorised personnel only</small>
+        </form>
+    </div>
+</div>
+
+
+<!-- ===================== APP ===================== -->
+<div id="app" class="hidden app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 13l2-6h14l2 6"/><path d="M5 13h14v5H5z"/>
+                    <circle cx="7.5" cy="18.5" r="1.5"/><circle cx="16.5" cy="18.5" r="1.5"/>
+                </svg>
+            </div>
+            <div>
+                <strong>Transport Ledger</strong>
+                <small>ADMIN PORTAL</small>
+            </div>
+        </div>
+
+        <p class="navlabel">Workspace</p>
+
+        <button data-page="dashboard" class="nav active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            <span>Dashboard</span>
+        </button>
+
+        <button data-page="records" class="nav">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            <span>Transport records</span>
+        </button>
+
+        <button data-page="customers" class="nav">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+            <span>Customers</span>
+        </button>
+
+        <button data-page="invoices" class="nav">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+            <span>Invoices &amp; payments</span>
+        </button>
+
+        <button data-page="reports" class="nav">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+            <span>Reports &amp; PDF</span>
+        </button>
+
+        <button data-page="settings" class="nav">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Settings &amp; audit</span>
+        </button>
+
+        <div class="sidebar-foot">
+            <div class="secure-chip">
+                <span class="dot"></span>
+                <span>Secure admin workspace</span>
+            </div>
+            <button id="logout" class="secondary block" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                Sign out
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main>
+        <header class="topbar">
+            <div>
+                <small class="crumb">Workspace / <span id="crumb">Dashboard</span></small>
+                <h1 id="title">Dashboard overview</h1>
+            </div>
+            <span id="today" class="today-badge"></span>
+        </header>
+
+        <div id="setup" class="notice hidden">
+            <strong>Setup required:</strong> add your Supabase URL and anon key to <code>config.js</code> and run <code>sql/schema.sql</code>.
+        </div>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page">
+            <div class="intro">
+                <div>
+                    <small class="eyebrow">Operations at a glance</small>
+                    <h2>Clear records. Confident billing.</h2>
+                    <p>Manage transport entries, customers, invoices and reports in one place.</p>
+                </div>
+                <button class="primary" onclick="openRecord()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 5v14M5 12h14"/></svg>
+                    Add transport record
+                </button>
+            </div>
+
+            <div class="stats">
+                <article class="card kpi">
+                    <div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+                    <small>Service records</small>
+                    <h2 id="statRecords">0</h2>
+                </article>
+                <article class="card kpi">
+                    <div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <small>Recorded value (AED)</small>
+                    <h2 id="statValue">AED 0.00</h2>
+                </article>
+                <article class="card kpi">
+                    <div class="kpi-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+                    <small>Outstanding (AED)</small>
+                    <h2 id="statOutstanding">AED 0.00</h2>
+                </article>
+                <article class="card kpi">
+                    <div class="kpi-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+                    <small>Pending approval</small>
+                    <h2 id="statPending">0</h2>
+                </article>
+            </div>
+
+            <div class="card">
+                <div class="card-head">
+                    <h3>Recent transport records</h3>
+                </div>
+                <div id="recent"></div>
+            </div>
+        </section>
+
+        <!-- TRANSPORT RECORDS -->
+        <section id="records" class="page hidden">
+            <div class="toolbar">
+                <div>
+                    <h2>Transport records</h2>
+                    <p>Quantity × rate is calculated automatically.</p>
+                </div>
+                <button class="primary" onclick="openRecord()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 5v14M5 12h14"/></svg>
+                    Add record
+                </button>
+            </div>
+
+            <div class="filters">
+                <input id="recordSearch" placeholder="Search descriptions / remarks…" oninput="renderRecords()">
+                <input id="recordFrom" type="date">
+                <input id="recordTo" type="date">
+                <button class="secondary" onclick="renderRecords()">Filter</button>
+            </div>
+
+            <div class="card" id="recordsTable"></div>
+        </section>
+
+        <!-- CUSTOMERS -->
+        <section id="customers" class="page hidden">
+            <div class="toolbar">
+                <div>
+                    <h2>Customers</h2>
+                    <p>Manage customer billing profiles.</p>
+                </div>
+                <button class="primary" onclick="openCustomer()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 5v14M5 12h14"/></svg>
+                    Add customer
+                </button>
+            </div>
+            <div class="card" id="customersTable"></div>
+        </section>
+
+        <!-- INVOICES -->
+        <section id="invoices" class="page hidden">
+            <div class="toolbar">
+                <div>
+                    <h2>Invoices &amp; payments</h2>
+                    <p>Track approvals, payments and balances.</p>
+                </div>
+                <button class="primary" onclick="openInvoice()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 5v14M5 12h14"/></svg>
+                    Create invoice
+                </button>
+            </div>
+            <div class="card" id="invoicesTable"></div>
+        </section>
+
+        <!-- REPORTS -->
+        <section id="reports" class="page hidden">
+            <div class="toolbar">
+                <div>
+                    <h2>Reports &amp; PDF</h2>
+                    <p>Export records for a selected period in a reference-sheet style.</p>
+                </div>
+            </div>
+
+            <div class="reportgrid">
+                <div class="card">
+                    <div class="card-head"><h3>Build report</h3></div>
+
+                    <label>Report type
+                        <select id="reportType">
+                            <option value="range">Date-range report</option>
+                            <option value="invoice">Invoice PDF</option>
+                        </select>
+                    </label>
+
+                    <label>Customer
+                        <select id="reportCustomer">
+                            <option value="">All customers</option>
+                        </select>
+                    </label>
+
+                    <div class="twocol">
+                        <label>From date<input id="from" type="date"></label>
+                        <label>To date<input id="to" type="date"></label>
+                    </div>
+
+                    <label>Currency
+                        <select id="currency">
+                            <option>AED</option>
+                            <option>USD</option>
+                            <option>EUR</option>
+                            <option>GBP</option>
+                            <option>SAR</option>
+                            <option>PKR</option>
+                        </select>
+                    </label>
+
+                    <label>Invoice number
+                        <input id="invoiceNo" placeholder="e.g. MSJ-2026-001">
+                    </label>
+
+                    <button class="secondary block" onclick="previewReport()">Preview records</button>
+                    <button class="primary block" onclick="makePDF()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                        Generate PDF
+                    </button>
+
+                    <p class="hint">Currency selection changes the label only. It does not perform FX conversion. Enter rates in the currency you intend to report.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-head"><h3>Report preview</h3></div>
+                    <div id="preview" class="muted">Choose dates and preview matching records.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section id="settings" class="page hidden">
+            <div class="reportgrid">
+                <div class="card">
+                    <div class="card-head"><h3>Company profile</h3></div>
+
+                    <label>Company name<input id="companyName" value="MSJ Transport L.L.C"></label>
+                    <label>Address<textarea id="companyAddress"></textarea></label>
+                    <label>Phone / email<input id="companyContact"></label>
+                    <label>Default currency
+                        <select id="defaultCurrency">
+                            <option>AED</option><option>USD</option><option>EUR</option>
+                            <option>GBP</option><option>SAR</option><option>PKR</option>
+                        </select>
+                    </label>
+
+                    <button class="primary block" onclick="saveSettings()">Save settings</button>
+                    <p class="hint">Settings are saved in this browser's localStorage. For shared settings across devices, move them to the company_settings table.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <h3>Audit history</h3>
+                        <button class="secondary sm" onclick="loadAudit()">Refresh</button>
+                    </div>
+                    <div id="auditTable"></div>
+                    <p class="hint">Configure Supabase backups and periodically export data. Test restoration before relying on backups.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="overlay hidden">
+    <form id="modalForm" class="card modal">
+        <div class="modalhead">
+            <h2 id="modalTitle">Add record</h2>
+            <button type="button" class="icon-btn" onclick="closeModal()">×</button>
+        </div>
+        <div id="fields" class="fields"></div>
+        <div class="actions">
+            <button type="button" class="secondary" onclick="closeModal()">Cancel</button>
+            <button class="primary" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+<!-- TOASTS -->
+<div id="toast" class="toast"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

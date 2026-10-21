@@ -1,0 +1,5 @@
+window.APP_CONFIG = {
+  SUPABASE_URL: "https://mkhbhogbcywyjgepfzjx.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1raGJob2diY3l3eWpnZXBmemp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2MDA1ODUsImV4cCI6MjEwODE3NjU4NX0.uC8IrJ_lGMwShP1mdk1F75yO49h1nZrf53IrQhtETwE",
+  CURRENCY: "AED"
+};
