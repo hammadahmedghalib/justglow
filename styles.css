@@ -554,7 +554,7 @@ td b { color: var(--ink); font-weight: 600; }
         display: none !important; 
     }
     
-    .nav {
+        .nav {
         flex: 1;
         flex-direction: column;
         justify-content: center;
@@ -562,9 +562,21 @@ td b { color: var(--ink); font-weight: 600; }
         gap: 4px;
         border-radius: 0;
         margin: 0;
-        padding: 10px 0;
+        padding: 8px 2px;
         font-size: 10px;
         background: transparent;
+        overflow: hidden; /* Prevents text from spilling out */
+    }
+
+    .nav span {
+        display: block;
+        font-size: 9px; /* Slightly smaller text */
+        white-space: nowrap; /* Keeps text on one line */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adds "..." if the word is too long */
+        max-width: 100%;
+        text-align: center;
+        margin-top: 2px;
     }
     
     .nav svg { width: 20px; height: 20px; }
