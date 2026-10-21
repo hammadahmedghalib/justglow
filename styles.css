@@ -531,6 +531,7 @@ td b { color: var(--ink); font-weight: 600; }
     }
     
     /* Convert Sidebar to Bottom Navigation */
+       /* Convert Sidebar to Bottom Navigation */
     .sidebar {
         position: fixed;
         top: auto;
@@ -539,7 +540,8 @@ td b { color: var(--ink); font-weight: 600; }
         right: 0;
         width: 100%;
         height: 70px;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* Forces exactly 6 equal columns */
         padding: 0;
         border-right: 0;
         border-top: 1px solid #1E293B;
@@ -554,53 +556,37 @@ td b { color: var(--ink); font-weight: 600; }
         display: none !important; 
     }
     
-        .nav {
-        flex: 1;
+    .nav {
+        display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         gap: 4px;
         border-radius: 0;
         margin: 0;
-        padding: 8px 2px;
+        padding: 10px 2px;
         font-size: 10px;
         background: transparent;
-        overflow: hidden; /* Prevents text from spilling out */
-    }
-
-    .nav span {
-        display: block;
-        font-size: 9px; /* Slightly smaller text */
-        white-space: nowrap; /* Keeps text on one line */
+        width: 100%;
         overflow: hidden;
-        text-overflow: ellipsis; /* Adds "..." if the word is too long */
-        max-width: 100%;
+        white-space: nowrap;
+    }
+    
+    .nav svg { 
+        width: 20px; 
+        height: 20px; 
+        flex-shrink: 0;
+    }
+    
+    .nav span { 
+        display: block; 
+        font-size: 9px; 
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
         text-align: center;
-        margin-top: 2px;
     }
-    
-    .nav svg { width: 20px; height: 20px; }
-    .nav span { display: block; font-size: 10px; font-weight: 500; }
-    
-    /* Bottom Nav Active State */
-    .nav.active {
-        background: transparent;
-        color: var(--primary);
-        box-shadow: none;
-        position: relative;
-    }
-    .nav.active::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 20%;
-        right: 20%;
-        height: 3px;
-        background: var(--primary);
-        border-radius: 0 0 3px 3px;
-    }
-    .nav.active svg { color: var(--primary); }
-
     /* Topbar */
     .topbar { 
         flex-direction: row; 
