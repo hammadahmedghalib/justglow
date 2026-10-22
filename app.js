@@ -283,11 +283,11 @@
     }
 
     /* ---------- Invoices ---------- */
-    function statusClass(s) {
+        function statusClass(s) {
         if (s === "Paid" || s === "Approved") return "ok";
-        if (s === "Pending Approval") return "warn";
-        if (s === "Void") return "bad";
-        if (s === "Sent" || s === "Partially Paid") return "info";
+        if (s === "Pending Approval" || s === "Partially Paid") return "warn";
+        if (s === "Void" || s === "Unpaid") return "bad"; // Added Unpaid here
+        if (s === "Sent") return "info";
         return "";
     }
 
@@ -373,7 +373,7 @@
                 field("Total amount", "total_amount", row?.total_amount ?? 0, "number", false, 'min="0" step=".01" required') +
                 field("Amount paid", "amount_paid", row?.amount_paid ?? 0, "number", false, 'min="0" step=".01" required') +
                 select("Status", "status",
-                    ["Draft","Pending Approval","Approved","Sent","Partially Paid","Paid","Void"].map(x => [x, x]),
+    ["Draft","Pending Approval","Approved","Sent","Partially Paid","Paid","Unpaid","Void"].map(x => [x, x]),
                     row?.status || "Draft", true) +
                 field("Notes", "notes", row?.notes || "", "text", true);
         }
